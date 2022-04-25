@@ -35,7 +35,7 @@ internal class YoutubeDLVideoDownloader : IVideoDownloader
             saveDir.Create();
         }
 
-        var idFileName = Guid.NewGuid().ToString() + ".mp4";
+        var idFileName = DateTimeOffset.Now.ToUnixTimeSeconds() + ".mp4";
 
         ProcessStartInfo startInfo = new()
         {
