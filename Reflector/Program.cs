@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Reflector.Daemons;
+using Reflector.Models;
+using Reflector.Services;
 using Serilog;
 using Serilog.Extensions.Logging;
 
@@ -40,15 +42,20 @@ builder.ConfigureServices((ctx, services) =>
         TokenType = TokenType.Bot,
         LoggerFactory = loggerFactory,
         MinimumLogLevel = LogLevel.Information,
+        Intents = DiscordIntents.AllUnprivileged
     };
+
+    var reflectorSettings = ctx.Configuration.GetSection(nameof(Reflector)).Get<ReflectorSettings>() ?? new();
 
     services
         .AddSingleton<DiscordClient>(_ => new DiscordClient(discordConfig))
+        .AddSingleton<IVideoDownloader, YoutubeDLVideoDownloader>()
         .AddHostedService<ResponderDaemon>()
+        .AddSingleton(reflectorSettings)
         .AddHostedService<BotDaemon>()
         ;
 
 });
 
-var host = builder.UseConsoleLifetime(o => o.SuppressStatusMessages = true).Build();
+var host = builder.UseConsoleLifetime(o => o.SuppressStatusMessages = false).Build();
 await host.RunAsync();
