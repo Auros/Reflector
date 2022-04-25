@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "Reflector Development": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    },
+    "Reflector Release": {
+      "commandName": "Project"
+    }
+  }
+}
