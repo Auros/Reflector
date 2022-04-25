@@ -22,11 +22,6 @@ internal class YoutubeDLVideoDownloader : IVideoDownloader
 
     public async Task<Stream> DownloadAsync(string url)
     {
-        if (string.IsNullOrEmpty(_reflectorSettings.YoutubeDLPath))
-        {
-            throw new Exception("Youtube DL path not provided. Unable to download videos.");
-        }
-
         // Create the temporary folder if it doesn't exist.
         DirectoryInfo saveDir = new(Path.Combine(_hostEnvironment.ContentRootPath, _reflectorSettings.DownloadFolderPath ?? "Reflector Downloads"));
         if (!saveDir.Exists)
@@ -39,7 +34,7 @@ internal class YoutubeDLVideoDownloader : IVideoDownloader
 
         ProcessStartInfo startInfo = new()
         {
-            FileName = _reflectorSettings.YoutubeDLPath,
+            FileName = _reflectorSettings.YoutubeDLPath ?? string.Empty,
             Arguments = $"{url} -o {idFileName}",
             UseShellExecute = false,
             CreateNoWindow = false,
