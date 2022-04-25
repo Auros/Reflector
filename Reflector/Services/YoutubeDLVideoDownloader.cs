@@ -28,7 +28,7 @@ internal class YoutubeDLVideoDownloader : IVideoDownloader
         }
 
         // Create the temporary folder if it doesn't exist.
-        DirectoryInfo saveDir = new(Path.Combine(_hostEnvironment.ContentRootPath, "Temporary Download Cache"));
+        DirectoryInfo saveDir = new(Path.Combine(_hostEnvironment.ContentRootPath, _reflectorSettings.DownloadFolderPath ?? "Reflector Downloads"));
         if (!saveDir.Exists)
         {
             _logger.LogInformation("The temporary cache folder {SaveDirectory} doesn't exist, creating...", saveDir.FullName);
@@ -51,7 +51,6 @@ internal class YoutubeDLVideoDownloader : IVideoDownloader
         Process process = new() { StartInfo = startInfo };
 
         _logger.LogInformation("Starting download process for {Url}", url);
-
         CancellationTokenSource timeout = new((int)((_reflectorSettings.DownloadTimeoutInSeconds ?? 20f) * 1000));
 
         try
