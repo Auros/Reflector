@@ -1,4 +1,4 @@
-﻿FROM docker pull tnk4on/yt-dlp:latest,alpine-static
+﻿FROM tnk4on/yt-dlp:latest,alpine-static
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
 WORKDIR /app
