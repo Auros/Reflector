@@ -4,8 +4,8 @@ using DisCatSharp.EventArgs;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Reflector.Exceptions;
+using Reflector.Interfaces;
 using Reflector.Models;
-using Reflector.Services;
 using System.Text.RegularExpressions;
 
 namespace Reflector.Daemons;
@@ -50,17 +50,13 @@ internal class ResponderDaemon : IHostedService
                 }
 
                 var match = _twitchUrlRegex.Match(e.Message.Content);
-                _logger.LogInformation("RegexIsMatch = {IsMatch}, Match = {MatchedContext}", match != Match.Empty, match == Match.Empty ? "None" : match.Value);
 
                 if (match != Match.Empty)
                 {
                     try
                     {
                         await e.Channel.TriggerTypingAsync();
-                        await using var videoStream = await _videoDownloader.DownloadAsync(
-                            match.Value,
-                            match.Value.Replace("https://clips.twitch.tv/", string.Empty).Replace("https://www.twitch.tv/", string.Empty) + ".mp4"
-                        );
+                        await using var videoStream = await _videoDownloader.DownloadAsync(match.Value);
 
                         var builder = new DiscordMessageBuilder()
                             .WithFile(match.Value.Replace("https://clips.twitch.tv/", string.Empty).Replace("https://www.twitch.tv/", string.Empty) + ".mp4", videoStream);
@@ -70,6 +66,14 @@ internal class ResponderDaemon : IHostedService
                     catch (ProgramDoesNotExistException pe)
                     {
                         _logger.LogError("{Exception}", pe);
+                    }
+                    catch (VideoDownloadFailedException ve)
+                    {
+                        _logger.LogError("{Exception}", ve);
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.LogCritical("An unhandled exception has occured.\n{Exception}", e);
                     }
                 }
             }

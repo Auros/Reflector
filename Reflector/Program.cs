@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Reflector.Daemons;
+using Reflector.Interfaces;
 using Reflector.Models;
 using Reflector.Services;
 using Serilog;
