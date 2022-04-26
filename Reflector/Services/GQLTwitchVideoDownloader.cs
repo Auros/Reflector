@@ -61,6 +61,7 @@ internal class GQLTwitchVideoDownloader : IVideoDownloader
         _logger.LogInformation("Starting download process for {Url}", url);
 
         var videoStream = await _httpClient.GetStreamAsync(download, cancellationToken: timeout.Token);
+        _logger.LogInformation("Downloaded clip with slug {Slug} at {Url}", slug, url);
         if (_reflectorSettings.DeleteLocalDownloads ?? true)
         {
             // If the user wants to delete the file, we don't do anything as we don't save it with this implementation
@@ -79,10 +80,12 @@ internal class GQLTwitchVideoDownloader : IVideoDownloader
         }
 
         var idFileName = DateTimeOffset.UtcNow.ToUnixTimeSeconds() + "_" + slug + ".mp4";
+        var path = Path.Combine(saveDir.FullName, idFileName);
         MemoryStream memoryStream = new();
         await videoStream.CopyToAsync(memoryStream);
         memoryStream.Position = 0;
 
+        _logger.LogInformation("Saving downloaded file to {File}", path);
         await using var fileStream = File.OpenWrite(Path.Combine(saveDir.FullName, idFileName));
         await memoryStream.CopyToAsync(fileStream);
         memoryStream.Position = 0;
