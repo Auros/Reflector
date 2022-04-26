@@ -53,9 +53,9 @@ internal class YoutubeDLVideoDownloader : IVideoDownloader
             process.Start();
             await process.WaitForExitAsync(timeout.Token);
         }
-        catch
+        catch (Exception e)
         {
-            _logger.LogError("An error occurred while trying to download the video {VideoUrl}", url);
+            _logger.LogError("An error occurred while trying to download the video {VideoUrl}\n{Exception}", url, e);
             throw;
         }
 

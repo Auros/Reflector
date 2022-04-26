@@ -1,4 +1,6 @@
-﻿FROM tnk4on/yt-dlp:latest
+﻿FROM python:3.7.1-alpine
+WORKDIR /dep
+RUN pip install --upgrade pip && pip --no-cache-dir install -U yt-dlp
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
 WORKDIR /app
