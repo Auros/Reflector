@@ -11,6 +11,4 @@ FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /app
 COPY --from=build-env /app .
 
-FROM python:3.8-slim-buster
-
 ENTRYPOINT ["dotnet", "Reflector.dll"]

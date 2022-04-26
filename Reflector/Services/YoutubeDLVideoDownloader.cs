@@ -34,7 +34,7 @@ internal class YoutubeDLVideoDownloader : IVideoDownloader
 
         ProcessStartInfo startInfo = new()
         {
-            FileName = _reflectorSettings.YoutubeDLPath ?? string.Empty,
+            FileName = string.Empty,
             Arguments = $"{url} -o {idFileName}",
             UseShellExecute = false,
             CreateNoWindow = false,

@@ -50,10 +50,11 @@ builder.ConfigureServices((ctx, services) =>
 
     services
         .AddSingleton<DiscordClient>(_ => new DiscordClient(discordConfig))
-        .AddSingleton<IVideoDownloader, YoutubeDLVideoDownloader>()
+        .AddSingleton<IVideoDownloader, GQLTwitchVideoDownloader>()
         .AddHostedService<ResponderDaemon>()
         .AddSingleton(reflectorSettings)
         .AddHostedService<BotDaemon>()
+        .AddSingleton<HttpClient>()
         ;
 
 });
